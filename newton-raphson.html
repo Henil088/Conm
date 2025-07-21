@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Newton-Raphson Method</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    input { margin: 5px 0; padding: 5px; width: 300px; }
+    button { margin: 10px 0; padding: 8px 16px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: right; }
+    th { background-color: #f0f0f0; }
+    #result { margin-top: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <h2>Newton-Raphson Method Solver</h2>
+
+  <label>f(x): <input type="text" id="fx" value="x**3 - x - 2"></label><br>
+  <label>f '(x): <input type="text" id="dfx" value="3*x**2 - 1"></label><br>
+  <label>Initial guess (x₀): <input type="number" id="x0" value="1.5" step="any"></label><br>
+  <label>Tolerance (ε): <input type="number" id="tolerance" value="0.0001" step="any"></label><br>
+  <label>Max Iterations: <input type="number" id="maxIter" value="50"></label><br>
+  
+  <button onclick="newtonRaphson()">Calculate</button>
+
+  <div id="result"></div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Iteration</th>
+        <th>x</th>
+        <th>f(x)</th>
+        <th>f '(x)</th>
+        <th>Error</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+
+  <div>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Readable Newton-Raphson Method Code</title>
+  <style>
+    pre {
+      background-color: #f4f4f4;
+      padding: 15px;
+      border: 1px solid #ccc;
+      white-space: pre-wrap;
+      overflow-x: auto;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Newton-Raphson Method Code (Readable Format)</h2>
+
+<pre><code>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Newton-Raphson Method&lt;/title&gt;
+  &lt;style&gt;
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    input { margin: 5px 0; padding: 5px; width: 300px; }
+    button { margin: 10px 0; padding: 8px 16px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: right; }
+    th { background-color: #f0f0f0; }
+    #result { margin-top: 20px; font-weight: bold; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;h2&gt;Newton-Raphson Method Solver&lt;/h2&gt;
+
+  &lt;label&gt;f(x): &lt;input type="text" id="fx" value="x**3 - x - 2"&gt;&lt;/label&gt;&lt;br&gt;
+  &lt;label&gt;f '(x): &lt;input type="text" id="dfx" value="3*x**2 - 1"&gt;&lt;/label&gt;&lt;br&gt;
+  &lt;label&gt;Initial guess (x₀): &lt;input type="number" id="x0" value="1.5" step="any"&gt;&lt;/label&gt;&lt;br&gt;
+  &lt;label&gt;Tolerance (ε): &lt;input type="number" id="tolerance" value="0.0001" step="any"&gt;&lt;/label&gt;&lt;br&gt;
+  &lt;label&gt;Max Iterations: &lt;input type="number" id="maxIter" value="50"&gt;&lt;/label&gt;&lt;br&gt;
+
+  &lt;button onclick="newtonRaphson()"&gt;Calculate&lt;/button&gt;
+
+  &lt;div id="result"&gt;&lt;/div&gt;
+
+  &lt;table&gt;
+    &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;th&gt;Iteration&lt;/th&gt;
+        &lt;th&gt;x&lt;/th&gt;
+        &lt;th&gt;f(x)&lt;/th&gt;
+        &lt;th&gt;f '(x)&lt;/th&gt;
+        &lt;th&gt;Error&lt;/th&gt;
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody id="tableBody"&gt;&lt;/tbody&gt;
+  &lt;/table&gt;
+
+  &lt;script&gt;
+    function evaluate(expr, x) {
+      try {
+        return eval(expr.replace(/x/g, `(${x})`));
+      } catch (e) {
+        return NaN;
+      }
+    }
+
+    function newtonRaphson() {
+      const fxStr = document.getElementById("fx").value;
+      const dfxStr = document.getElementById("dfx").value;
+      let x = parseFloat(document.getElementById("x0").value);
+      const tol = parseFloat(document.getElementById("tolerance").value);
+      const maxIter = parseInt(document.getElementById("maxIter").value);
+      const table = document.getElementById("tableBody");
+      const resultDiv = document.getElementById("result");
+
+      table.innerHTML = "";
+      resultDiv.innerHTML = "";
+
+      let error = null;
+
+      for (let i = 1; i &lt;= maxIter; i++) {
+        const fx = evaluate(fxStr, x);
+        const dfx = evaluate(dfxStr, x);
+
+        if (dfx === 0) {
+          resultDiv.innerHTML = `&lt;p style="color:red;"&gt;Derivative is zero at iteration ${i}. Cannot proceed.&lt;/p&gt;`;
+          return;
+        }
+
+        const xNew = x - fx / dfx;
+        error = Math.abs(xNew - x);
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          &lt;td&gt;${i}&lt;/td&gt;
+          &lt;td&gt;${x.toFixed(6)}&lt;/td&gt;
+          &lt;td&gt;${fx.toFixed(6)}&lt;/td&gt;
+          &lt;td&gt;${dfx.toFixed(6)}&lt;/td&gt;
+          &lt;td&gt;${i === 1 ? "—" : error.toFixed(10)}&lt;/td&gt;
+        `;
+        table.appendChild(row);
+
+        if (error &lt; tol) {
+          resultDiv.innerHTML = `&lt;p&gt;&lt;strong&gt;Root found:&lt;/strong&gt; x ≈ ${xNew.toFixed(6)} after ${i} iterations.&lt;/p&gt;`;
+          return;
+        }
+
+        x = xNew;
+      }
+
+      resultDiv.innerHTML = `&lt;p&gt;&lt;strong&gt;Max iterations reached.&lt;/strong&gt; Last estimate: x ≈ ${x.toFixed(6)}&lt;/p&gt;`;
+    }
+  &lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+</body>
+</html>
+
+  </div>
+  <script>
+    function evaluate(expr, x) {
+      try {
+        return eval(expr.replace(/x/g, `(${x})`));
+      } catch (e) {
+        return NaN;
+      }
+    }
+
+    function newtonRaphson() {
+      const fxStr = document.getElementById("fx").value;
+      const dfxStr = document.getElementById("dfx").value;
+      let x = parseFloat(document.getElementById("x0").value);
+      const tol = parseFloat(document.getElementById("tolerance").value);
+      const maxIter = parseInt(document.getElementById("maxIter").value);
+      const table = document.getElementById("tableBody");
+      const resultDiv = document.getElementById("result");
+
+      table.innerHTML = "";
+      resultDiv.innerHTML = "";
+
+      let error = null;
+      for (let i = 1; i <= maxIter; i++) {
+        const fx = evaluate(fxStr, x);
+        const dfx = evaluate(dfxStr, x);
+
+        if (dfx === 0) {
+          resultDiv.innerHTML = `<p style="color:red;">Derivative is zero at iteration ${i}. Cannot proceed.</p>`;
+          return;
+        }
+
+        const xNew = x - fx / dfx;
+        error = Math.abs(xNew - x);
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${i}</td>
+          <td>${x.toFixed(6)}</td>
+          <td>${fx.toFixed(6)}</td>
+          <td>${dfx.toFixed(6)}</td>
+          <td>${i === 1 ? "—" : error.toFixed(10)}</td>
+        `;
+        table.appendChild(row);
+
+        if (error < tol) {
+          resultDiv.innerHTML = `<p><strong>Root found:</strong> x ≈ ${xNew.toFixed(6)} after ${i} iterations.</p>`;
+          return;
+        }
+
+        x = xNew;
+      }
+
+      resultDiv.innerHTML = `<p><strong>Max iterations reached.</strong> Last estimate: x ≈ ${x.toFixed(6)}</p>`;
+    }
+  </script>
+
+</body>
+</html>
