@@ -38,6 +38,141 @@
     <tbody></tbody>
   </table>
 
+  <div>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Readable Bisection Method Code</title>
+  <style>
+    pre {
+      background-color: #f4f4f4;
+      padding: 15px;
+      border: 1px solid #ccc;
+      white-space: pre-wrap;
+      overflow-x: auto;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Bisection Method Code (Readable Format)</h2>
+<pre><code>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Bisection Method&lt;/title&gt;
+  &lt;style&gt;
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: right; }
+    th { background-color: #f0f0f0; }
+    input { margin: 5px; padding: 5px; }
+    #result { margin-top: 20px; font-weight: bold; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;h2&gt;Bisection Method Solver&lt;/h2&gt;
+  &lt;label&gt;f(x): &lt;input type="text" id="fx" value="x**3 - x - 1" &gt;&lt;/label&gt;
+  &lt;label&gt;a: &lt;input type="number" id="a" value="1" step="any"&gt;&lt;/label&gt;
+  &lt;label&gt;b: &lt;input type="number" id="b" value="1.5" step="any"&gt;&lt;/label&gt;
+  &lt;label&gt;ε (tolerance): &lt;input type="number" id="e" value="0.001" step="any"&gt;&lt;/label&gt;
+  &lt;button onclick="runBisection()"&gt;Run&lt;/button&gt;
+
+  &lt;div id="result"&gt;&lt;/div&gt;
+  &lt;table id="outputTable"&gt;
+    &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;th&gt;i&lt;/th&gt;
+        &lt;th&gt;a&lt;/th&gt;
+        &lt;th&gt;f(a)&lt;/th&gt;
+        &lt;th&gt;b&lt;/th&gt;
+        &lt;th&gt;f(b)&lt;/th&gt;
+        &lt;th&gt;c&lt;/th&gt;
+        &lt;th&gt;f(c)&lt;/th&gt;
+        &lt;th&gt;error&lt;/th&gt;
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;&lt;/tbody&gt;
+  &lt;/table&gt;
+
+  &lt;script&gt;
+    function find_fx(expr, x) {
+      const replaced = expr.replace(/x/g, `(${x})`);
+      return eval(replaced);
+    }
+
+    function runBisection() {
+      const fx = document.getElementById("fx").value;
+
+      const aInput = parseFloat(document.getElementById("a").value);
+      const bInput = parseFloat(document.getElementById("b").value);
+      const e = parseFloat(document.getElementById("e").value);
+
+      let a = aInput;
+      let b = bInput;
+      let c = null;
+      let c_before = null;
+      let error = 10;
+      let iteration = 0;
+
+      const tableBody = document.querySelector("tbody");
+      tableBody.innerHTML = "";
+
+      while (error >= e) {
+        c_before = c;
+        c = (a + b) / 2;
+        let fa = find_fx(fx, a);
+        let fb = find_fx(fx, b);
+        let fc = find_fx(fx, c);
+
+        let errorStr = iteration === 0 ? "—" : error.toFixed(6);
+
+        const row = tableBody.insertRow();
+        row.innerHTML = `
+          &lt;td&gt;\${iteration}&lt;/td&gt;
+          &lt;td&gt;\${a.toFixed(6)}&lt;/td&gt;
+          &lt;td&gt;\${fa.toFixed(6)}&lt;/td&gt;
+          &lt;td&gt;\${b.toFixed(6)}&lt;/td&gt;
+          &lt;td&gt;\${fb.toFixed(6)}&lt;/td&gt;
+          &lt;td&gt;\${c.toFixed(6)}&lt;/td&gt;
+          &lt;td&gt;\${fc.toFixed(6)}&lt;/td&gt;
+          &lt;td&gt;\${errorStr}&lt;/td&gt;
+        `;
+
+        if (iteration !== 0 &amp;&amp; error &lt; e) {
+          document.getElementById("result").textContent = 
+            \`Root found at x ≈ \${c.toFixed(6)} after \${iteration} iterations.\`;
+          break;
+        }
+
+        if (fa * fc &lt; 0) {
+          b = c;
+        } else {
+          a = c;
+        }
+
+        if (iteration !== 0) {
+          error = Math.abs(c - c_before);
+        }
+
+        iteration++;
+      }
+    }
+  &lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+</body>
+</html>
+
+  </div>
   <script>
       function find_fx(expr, x) {
   const replaced = expr.replace(/x/g, `(${x})`);
