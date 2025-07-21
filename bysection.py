@@ -1,9 +1,9 @@
 import math
 
-fx = "x**3 - x - 1"    # F(X)
-e = 0.001
-a = 1
-b = 1.5
+fx = input("f(x): ")    # F(X)
+a = float(input("a: "))
+b = float(input("b: "))
+e = float(input("e: "))
 
 iteration = 0
 error = 10  # Start with a large error
