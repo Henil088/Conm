@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Fixed Point Method</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #999;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        input {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Fixed Point Iteration Calculator</h2>
+
+    <label for="gx">Enter g(x):</label>
+    <input type="text" id="gx" value="Math.cos(x)"><br>
+
+    <label for="x0">Initial Guess x₀:</label>
+    <input type="number" id="x0" value="0.5" step="any"><br>
+
+    <label for="tolerance">Tolerance:</label>
+    <input type="number" id="tolerance" value="0.0001" step="any"><br>
+
+    <label for="maxIter">Max Iterations:</label>
+    <input type="number" id="maxIter" value="50"><br>
+
+    <button onclick="fixedPoint()">Calculate</button>
+
+    <div id="output"></div>
+    
+    <div>
+
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Readable Fixed Point Iteration Code</title>
+  <style>
+    pre {
+      background-color: #f4f4f4;
+      padding: 15px;
+      border: 1px solid #ccc;
+      overflow-x: auto;
+      white-space: pre-wrap; /* wrap long lines */
+      font-family: Consolas, Monaco, 'Courier New', monospace;
+      font-size: 14px;
+      margin: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Fixed Point Iteration HTML & JavaScript Code (Readable Format)</h1>
+  <pre><code>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Fixed Point Method&lt;/title&gt;
+  &lt;style&gt;
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #999;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    input {
+      margin-bottom: 10px;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h2&gt;Fixed Point Iteration Calculator&lt;/h2&gt;
+
+  &lt;label for="gx"&gt;Enter g(x):&lt;/label&gt;
+  &lt;input type="text" id="gx" value="Math.cos(x)"&gt;&lt;br&gt;
+
+  &lt;label for="x0"&gt;Initial Guess x₀:&lt;/label&gt;
+  &lt;input type="number" id="x0" value="0.5" step="any"&gt;&lt;br&gt;
+
+  &lt;label for="tolerance"&gt;Tolerance:&lt;/label&gt;
+  &lt;input type="number" id="tolerance" value="0.0001" step="any"&gt;&lt;br&gt;
+
+  &lt;label for="maxIter"&gt;Max Iterations:&lt;/label&gt;
+  &lt;input type="number" id="maxIter" value="50"&gt;&lt;br&gt;
+
+  &lt;button onclick="fixedPoint()"&gt;Calculate&lt;/button&gt;
+
+  &lt;div id="output"&gt;&lt;/div&gt;
+
+  &lt;script&gt;
+    function fixedPoint() {
+      const gxInput = document.getElementById("gx").value;
+      let x = parseFloat(document.getElementById("x0").value);
+      const tol = parseFloat(document.getElementById("tolerance").value);
+      const maxIter = parseInt(document.getElementById("maxIter").value);
+      const outputDiv = document.getElementById("output");
+
+      const g = (x) =&gt; {
+        try {
+          return eval(gxInput.replace(/x/g, `(${x})`));
+        } catch (e) {
+          outputDiv.innerHTML = "&lt;p style='color:red;'&gt;Error in function expression.&lt;/p&gt;";
+          return NaN;
+        }
+      };
+
+      let tableHTML = `
+        &lt;table&gt;
+          &lt;thead&gt;
+            &lt;tr&gt;
+              &lt;th&gt;Iteration&lt;/th&gt;
+              &lt;th&gt;xₙ&lt;/th&gt;
+              &lt;th&gt;xₙ₊₁&lt;/th&gt;
+              &lt;th&gt;Error&lt;/th&gt;
+            &lt;/tr&gt;
+          &lt;/thead&gt;
+          &lt;tbody&gt;
+      `;
+
+      let prevX = x;
+      let error = null;
+
+      for (let i = 1; i &lt;= maxIter; i++) {
+        let nextX = g(prevX);
+        error = Math.abs(nextX - prevX);
+
+        tableHTML += `
+          &lt;tr&gt;
+            &lt;td&gt;\${i}&lt;/td&gt;
+            &lt;td&gt;\${prevX.toFixed(6)}&lt;/td&gt;
+            &lt;td&gt;\${nextX.toFixed(6)}&lt;/td&gt;
+            &lt;td&gt;\${error.toExponential(2)}&lt;/td&gt;
+          &lt;/tr&gt;
+        `;
+
+        if (error &lt; tol) {
+          tableHTML += `&lt;/tbody&gt;&lt;/table&gt;&lt;p&gt;&lt;strong&gt;Converged: x ≈ \${nextX.toFixed(6)}&lt;/strong&gt;&lt;/p&gt;`;
+          outputDiv.innerHTML = tableHTML;
+          return;
+        }
+
+        prevX = nextX;
+      }
+
+      tableHTML += `&lt;/tbody&gt;&lt;/table&gt;&lt;p&gt;&lt;strong&gt;Max iterations reached. Last estimate: x ≈ \${prevX.toFixed(6)}&lt;/strong&gt;&lt;/p&gt;`;
+      outputDiv.innerHTML = tableHTML;
+    }
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+  </code></pre>
+</body>
+</html>
+
+    </div>
+
+    <script>
+        function fixedPoint() {
+            const gxInput = document.getElementById("gx").value;
+            let x = parseFloat(document.getElementById("x0").value);
+            const tol = parseFloat(document.getElementById("tolerance").value);
+            const maxIter = parseInt(document.getElementById("maxIter").value);
+            const outputDiv = document.getElementById("output");
+
+            const g = (x) => {
+                try {
+                    return eval(gxInput.replace(/x/g, `(${x})`));
+                } catch (e) {
+                    outputDiv.innerHTML = "<p style='color:red;'>Error in function expression.</p>";
+                    return NaN;
+                }
+            };
+
+            let tableHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Iteration</th>
+              <th>xₙ</th>
+              <th>xₙ₊₁</th>
+              <th>Error</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+            let prevX = x;
+            let error = null;
+
+            for (let i = 1; i <= maxIter; i++) {
+                let nextX = g(prevX);
+                error = Math.abs(nextX - prevX);
+
+                tableHTML += `
+          <tr>
+            <td>${i}</td>
+            <td>${prevX.toFixed(6)}</td>
+            <td>${nextX.toFixed(6)}</td>
+            <td>${error.toExponential(2)}</td>
+          </tr>
+        `;
+
+                if (error < tol) {
+                    tableHTML += `</tbody></table><p><strong>Converged: x ≈ ${nextX.toFixed(6)}</strong></p>`;
+                    outputDiv.innerHTML = tableHTML;
+                    return;
+                }
+
+                prevX = nextX;
+            }
+
+            tableHTML += `</tbody></table><p><strong>Max iterations reached. Last estimate: x ≈ ${prevX.toFixed(6)}</strong></p>`;
+            outputDiv.innerHTML = tableHTML;
+        }
+    </script>
+</body>
+
+</html>

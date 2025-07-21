@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>False Position Method</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #999;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        input {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>False Position Method Calculator</h2>
+
+    <label for="function">Function f(x):</label>
+    <input type="text" id="function" value="x*x - 4"><br>
+
+    <label for="a">Enter a:</label>
+    <input type="number" id="a" value="0"><br>
+
+    <label for="b">Enter b:</label>
+    <input type="number" id="b" value="3"><br>
+
+    <label for="tolerance">Tolerance:</label>
+    <input type="number" id="tolerance" value="0.0001" step="any"><br>
+
+    <label for="maxIter">Max Iterations:</label>
+    <input type="number" id="maxIter" value="100"><br>
+
+    <button onclick="falsePosition()">Calculate Root</button>
+
+    <div id="output"></div>
+
+    <div>
+        <!DOCTYPE html>
+        <html lang="en">
+
+        <head>
+            <meta charset="UTF-8" />
+            <title>Readable False Position Method Code</title>
+            <style>
+                pre {
+                    background-color: #f4f4f4;
+                    padding: 15px;
+                    border: 1px solid #ccc;
+                    overflow-x: auto;
+                    white-space: pre-wrap;
+                    font-family: Consolas, Monaco, 'Courier New', monospace;
+                    font-size: 14px;
+                    margin: 20px;
+                }
+            </style>
+        </head>
+
+        <body>
+            <h1>False Position Method HTML & JavaScript Code (Readable Format)</h1>
+            <pre><code>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;False Position Method&lt;/title&gt;
+  &lt;style&gt;
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #999;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    input {
+      margin-bottom: 10px;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h2&gt;False Position Method Calculator&lt;/h2&gt;
+
+  &lt;label for="function"&gt;Function f(x):&lt;/label&gt;
+  &lt;input type="text" id="function" value="x*x - 4"&gt;&lt;br&gt;
+
+  &lt;label for="a"&gt;Enter a:&lt;/label&gt;
+  &lt;input type="number" id="a" value="0"&gt;&lt;br&gt;
+
+  &lt;label for="b"&gt;Enter b:&lt;/label&gt;
+  &lt;input type="number" id="b" value="3"&gt;&lt;br&gt;
+
+  &lt;label for="tolerance"&gt;Tolerance:&lt;/label&gt;
+  &lt;input type="number" id="tolerance" value="0.0001" step="any"&gt;&lt;br&gt;
+
+  &lt;label for="maxIter"&gt;Max Iterations:&lt;/label&gt;
+  &lt;input type="number" id="maxIter" value="100"&gt;&lt;br&gt;
+
+  &lt;button onclick="falsePosition()"&gt;Calculate Root&lt;/button&gt;
+
+  &lt;div id="output"&gt;&lt;/div&gt;
+
+  &lt;script&gt;
+    function falsePosition() {
+      const funcInput = document.getElementById("function").value;
+      const aInput = parseFloat(document.getElementById("a").value);
+      const bInput = parseFloat(document.getElementById("b").value);
+      const tol = parseFloat(document.getElementById("tolerance").value);
+      const maxIter = parseInt(document.getElementById("maxIter").value);
+      const outputDiv = document.getElementById("output");
+
+      const f = (x) =&gt; {
+        try {
+          return eval(funcInput.replace(/x/g, `(${x})`));
+        } catch (e) {
+          outputDiv.innerHTML = "&lt;p style='color:red;'&gt;Error in function expression.&lt;/p&gt;";
+          return NaN;
+        }
+      };
+
+      let a = aInput;
+      let b = bInput;
+      let fa = f(a);
+      let fb = f(b);
+
+      if (fa * fb &gt; 0) {
+        outputDiv.innerHTML = "&lt;p style='color:red;'&gt;f(a) and f(b) must have opposite signs.&lt;/p&gt;";
+        return;
+      }
+
+      let c, fc, prevC = null, error = null;
+      let tableHTML = `
+        &lt;table&gt;
+          &lt;thead&gt;
+            &lt;tr&gt;
+              &lt;th&gt;Iteration&lt;/th&gt;
+              &lt;th&gt;a&lt;/th&gt;
+              &lt;th&gt;b&lt;/th&gt;
+              &lt;th&gt;c&lt;/th&gt;
+              &lt;th&gt;f(c)&lt;/th&gt;
+              &lt;th&gt;Error&lt;/th&gt;
+            &lt;/tr&gt;
+          &lt;/thead&gt;
+          &lt;tbody&gt;
+      `;
+
+      for (let i = 1; i &lt;= maxIter; i++) {
+        c = (a * fb - b * fa) / (fb - fa);
+        fc = f(c);
+        error = prevC !== null ? Math.abs(c - prevC) : null;
+
+        tableHTML += `
+          &lt;tr&gt;
+            &lt;td&gt;\${i}&lt;/td&gt;
+            &lt;td&gt;\${a.toFixed(6)}&lt;/td&gt;
+            &lt;td&gt;\${b.toFixed(6)}&lt;/td&gt;
+            &lt;td&gt;\${c.toFixed(6)}&lt;/td&gt;
+            &lt;td&gt;\${fc.toFixed(6)}&lt;/td&gt;
+            &lt;td&gt;\${error !== null ? error.toExponential(2) : "-"}&lt;/td&gt;
+          &lt;/tr&gt;
+        `;
+
+        if (Math.abs(fc) &lt; tol || (error !== null &amp;&amp; error &lt; tol)) {
+          tableHTML += `&lt;/tbody&gt;&lt;/table&gt;&lt;p&gt;&lt;strong&gt;Root found: x = \${c.toFixed(6)}&lt;/strong&gt;&lt;/p&gt;`;
+          outputDiv.innerHTML = tableHTML;
+          return;
+        }
+
+        if (fa * fc &lt; 0) {
+          b = c;
+          fb = fc;
+        } else {
+          a = c;
+          fa = fc;
+        }
+
+        prevC = c;
+      }
+
+      tableHTML += `&lt;/tbody&gt;&lt;/table&gt;&lt;p&gt;&lt;strong&gt;Max iterations reached. Last approximation: x = \${c.toFixed(6)}&lt;/strong&gt;&lt;/p&gt;`;
+      outputDiv.innerHTML = tableHTML;
+    }
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+  </code></pre>
+        </body>
+
+        </html>
+
+    </div>
+
+    <script>
+        function falsePosition() {
+            const funcInput = document.getElementById("function").value;
+            const aInput = parseFloat(document.getElementById("a").value);
+            const bInput = parseFloat(document.getElementById("b").value);
+            const tol = parseFloat(document.getElementById("tolerance").value);
+            const maxIter = parseInt(document.getElementById("maxIter").value);
+            const outputDiv = document.getElementById("output");
+
+            const f = (x) => {
+                try {
+                    return eval(funcInput.replace(/x/g, `(${x})`));
+                } catch (e) {
+                    outputDiv.innerHTML = "<p style='color:red;'>Error in function expression.</p>";
+                    return NaN;
+                }
+            };
+
+            let a = aInput;
+            let b = bInput;
+            let fa = f(a);
+            let fb = f(b);
+
+            if (fa * fb > 0) {
+                outputDiv.innerHTML = "<p style='color:red;'>f(a) and f(b) must have opposite signs.</p>";
+                return;
+            }
+
+            let c, fc, prevC = null, error = null;
+            let tableHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Iteration</th>
+              <th>a</th>
+              <th>b</th>
+              <th>c</th>
+              <th>f(c)</th>
+              <th>Error</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+            for (let i = 1; i <= maxIter; i++) {
+                c = (a * fb - b * fa) / (fb - fa);
+                fc = f(c);
+                error = prevC !== null ? Math.abs(c - prevC) : null;
+
+                tableHTML += `
+          <tr>
+            <td>${i}</td>
+            <td>${a.toFixed(6)}</td>
+            <td>${b.toFixed(6)}</td>
+            <td>${c.toFixed(6)}</td>
+            <td>${fc.toFixed(6)}</td>
+            <td>${error !== null ? error.toExponential(2) : "-"}</td>
+          </tr>
+        `;
+
+                if (Math.abs(fc) < tol || (error !== null && error < tol)) {
+                    tableHTML += `</tbody></table><p><strong>Root found: x = ${c.toFixed(6)}</strong></p>`;
+                    outputDiv.innerHTML = tableHTML;
+                    return;
+                }
+
+                if (fa * fc < 0) {
+                    b = c;
+                    fb = fc;
+                } else {
+                    a = c;
+                    fa = fc;
+                }
+
+                prevC = c;
+            }
+
+            tableHTML += `</tbody></table><p><strong>Max iterations reached. Last approximation: x = ${c.toFixed(6)}</strong></p>`;
+            outputDiv.innerHTML = tableHTML;
+        }
+    </script>
+</body>
+
+</html>
