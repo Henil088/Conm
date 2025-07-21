@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bisection Method</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: right; }
+    th { background-color: #f0f0f0; }
+    input { margin: 5px; padding: 5px; }
+    #result { margin-top: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <h2>Bisection Method Solver</h2>
+  <label>f(x): <input type="text" id="fx" value="x**3 - x - 1" ></label>
+  <label>a: <input type="number" id="a" value="1" step="any"></label>
+  <label>b: <input type="number" id="b" value="1.5" step="any"></label>
+  <label>ε (tolerance): <input type="number" id="e" value="0.001" step="any"></label>
+  <button onclick="runBisection()">Run</button>
+
+  <div id="result"></div>
+  <table id="outputTable">
+    <thead>
+      <tr>
+        <th>i</th>
+        <th>a</th>
+        <th>f(a)</th>
+        <th>b</th>
+        <th>f(b)</th>
+        <th>c</th>
+        <th>f(c)</th>
+        <th>error</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+      function find_fx(expr, x) {
+  const replaced = expr.replace(/x/g, `(${x})`);
+  return eval(replaced);
+}
+
+function runBisection() {
+  const fx = document.getElementById("fx").value; // Get updated function here
+
+  const aInput = parseFloat(document.getElementById("a").value);
+  const bInput = parseFloat(document.getElementById("b").value);
+  const e = parseFloat(document.getElementById("e").value);
+
+  let a = aInput;
+  let b = bInput;
+  let c = null;
+  let c_before = null;
+  let error = 10;
+  let iteration = 0;
+
+  const tableBody = document.querySelector("tbody");
+  tableBody.innerHTML = "";  // Clear previous output
+
+  while (error >= e) {
+    c_before = c;
+    c = (a + b) / 2;
+    let fa = find_fx(fx, a);
+    let fb = find_fx(fx, b);
+    let fc = find_fx(fx, c);
+
+    let errorStr = iteration === 0 ? "—" : error.toFixed(6);
+
+    // Insert row
+    const row = tableBody.insertRow();
+    row.innerHTML = `
+      <td>${iteration}</td>
+      <td>${a.toFixed(6)}</td>
+      <td>${fa.toFixed(6)}</td>
+      <td>${b.toFixed(6)}</td>
+      <td>${fb.toFixed(6)}</td>
+      <td>${c.toFixed(6)}</td>
+      <td>${fc.toFixed(6)}</td>
+      <td>${errorStr}</td>
+    `;
+
+    if (iteration !== 0 && error < e) {
+      document.getElementById("result").textContent = `Root found at x ≈ ${c.toFixed(6)} after ${iteration} iterations.`;
+      break;
+    }
+
+    if (fa * fc < 0) {
+      b = c;
+    } else {
+      a = c;
+    }
+
+    if (iteration !== 0) {
+      error = Math.abs(c - c_before);
+    }
+
+    iteration++;
+  }
+}
+
+  </script>
+
+</body>
+</html>
