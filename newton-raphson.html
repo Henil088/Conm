@@ -60,6 +60,64 @@
 </head>
 <body>
 
+<h2>Newton-Raphson Method Python Code (Readable Format)</h2>
+
+<pre><code>
+  import math
+from tabulate import tabulate
+
+def evaluate(expr, x):
+    try:
+        return eval(expr, {"x": x, "math": math, "__builtins__": {}})
+    except Exception as e:
+        print(f"Error evaluating expression: {e}")
+        return None
+
+def newton_raphson(fx_str, dfx_str, x0, tol, max_iter):
+    x = x0
+    table_data = []
+    for i in range(1, max_iter + 1):
+        fx = evaluate(fx_str, x)
+        dfx = evaluate(dfx_str, x)
+
+        if dfx == 0:
+            print(f"\nDerivative is zero at iteration {i}. Cannot proceed.")
+            break
+
+        x_new = x - fx / dfx
+        error = abs(x_new - x)
+
+        table_data.append([
+            i,
+            f"{x:.6f}",
+            f"{fx:.6f}",
+            f"{dfx:.6f}",
+            "—" if i == 1 else f"{error:.10f}"
+        ])
+
+        if error < tol:
+            print(tabulate(table_data, headers=["Iteration", "x", "f(x)", "f'(x)", "Error"]))
+            print(f"\n✅ Root found: x ≈ {x_new:.6f} after {i} iterations.")
+            return
+
+        x = x_new
+
+    print(tabulate(table_data, headers=["Iteration", "x", "f(x)", "f'(x)", "Error"]))
+    print(f"\n⚠️ Max iterations reached. Last estimate: x ≈ {x:.6f}")
+
+if __name__ == "__main__":
+    print("🔢 Newton-Raphson Method Solver\n")
+
+    fx_input = input("Enter f(x): ")
+    dfx_input = input("Enter f'(x): ")
+    x0 = float(input("Enter initial guess x₀: "))
+    tol = float(input("Enter tolerance ε: "))
+    max_iter = int(input("Enter max iterations: "))
+
+    newton_raphson(fx_input, dfx_input, x0, tol, max_iter)
+
+</pre></code>
+  
 <h2>Newton-Raphson Method Code (Readable Format)</h2>
 
 <pre><code>
