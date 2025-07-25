@@ -337,7 +337,7 @@ print("\n" + tabulate(table, headers=headers, tablefmt="grid"))
             <td>${b.toFixed(6)}</td>
             <td>${c.toFixed(6)}</td>
             <td>${fc.toFixed(6)}</td>
-            <td>${error !== null ? error.toExponential(2) : "-"}</td>
+            <td>${error !== null ? error.toFixed(10) : "-"}</td>
           </tr>
         `;
 
