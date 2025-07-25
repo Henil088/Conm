@@ -259,27 +259,28 @@ fixed_point_iteration(gx_expr, x0, tolerance, max_iter)
             let prevX = x;
             let error = null;
 
-            for (let i = 1; i <= maxIter; i++) {
-                let nextX = g(prevX);
-                error = Math.abs(nextX - prevX);
+          for (let i = 1; i <= maxIter; i++) {
+    let nextX = g(prevX);
+    error = Math.abs(nextX - prevX);
 
-                tableHTML += `
-          <tr>
-            <td>${i}</td>
-            <td>${prevX.toFixed(6)}</td>
-            <td>${nextX.toFixed(6)}</td>
-            <td>${error.toExponential(2)}</td>
-          </tr>
-        `;
+    tableHTML += `
+      <tr>
+        <td>${i}</td>
+        <td>${prevX.toFixed(6)}</td>
+        <td>${nextX.toFixed(6)}</td>
+        <td>${error.toFixed(10)}</td>
+      </tr>
+    `;
 
-                if (error < tol) {
-                    tableHTML += `</tbody></table><p><strong>Converged: x ≈ ${nextX.toFixed(6)}</strong></p>`;
-                    outputDiv.innerHTML = tableHTML;
-                    return;
-                }
+    if (error < tol) {
+        tableHTML += `</tbody></table><p><strong>✅ Converged: x ≈ ${nextX.toFixed(6)}</strong></p>`;
+        outputDiv.innerHTML = tableHTML;
+        return;
+    }
 
-                prevX = nextX;
-            }
+    prevX = nextX;
+}
+
 
             tableHTML += `</tbody></table><p><strong>Max iterations reached. Last estimate: x ≈ ${prevX.toFixed(6)}</strong></p>`;
             outputDiv.innerHTML = tableHTML;
