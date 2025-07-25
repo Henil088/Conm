@@ -68,6 +68,49 @@
   </style>
 </head>
 <body>
+   <h1>Fixed Point Iteration Python Code</h1>
+  <pre><code>
+  import math
+from tabulate import tabulate
+
+def fixed_point_iteration(gx_expr, x0, tolerance, max_iter):
+    # Dynamically create g(x) from user input using eval
+    def g(x):
+        return eval(gx_expr, {"x": x, "math": math})
+
+    iterations = []
+    prev_x = x0
+
+    for i in range(1, max_iter + 1):
+        try:
+            next_x = g(prev_x)
+        except Exception as e:
+            print(f"Error evaluating g(x): {e}")
+            return
+
+        error = abs(next_x - prev_x)
+        iterations.append([i, round(prev_x, 6), round(next_x, 6), f"{error:.2e}"])
+
+        if error < tolerance:
+            print(tabulate(iterations, headers=["Iteration", "xₙ", "xₙ₊₁", "Error"], tablefmt="grid"))
+            print(f"\n✅ Converged: x ≈ {round(next_x, 6)}")
+            return
+
+        prev_x = next_x
+
+    print(tabulate(iterations, headers=["Iteration", "xₙ", "xₙ₊₁", "Error"], tablefmt="grid"))
+    print(f"\n⚠️ Max iterations reached. Last estimate: x ≈ {round(prev_x, 6)}")
+
+# ====== User Input ======
+gx_expr = input("Enter g(x) (e.g., math.cos(x)): ")
+x0 = float(input("Initial guess x₀: "))
+tolerance = float(input("Tolerance: "))
+max_iter = int(input("Max iterations: "))
+
+# ====== Run Iteration ======
+fixed_point_iteration(gx_expr, x0, tolerance, max_iter)
+    
+  </pre></code>
   <h1>Fixed Point Iteration HTML & JavaScript Code (Readable Format)</h1>
   <pre><code>
 &lt;!DOCTYPE html&gt;
